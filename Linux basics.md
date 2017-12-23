@@ -41,7 +41,7 @@ Reference: https://alexpetralia.com/posts/2017/6/26/learning-linux-bash-to-get-t
 11. grep -inr {String}: find a string in any files in this directory or child directories
 12. column -s, -t <delimited_file>: display a comma-delimited file in columnar format
 13. ssh {username}@{hostname}: connect to a remote machine
-14 tree -LhaC 3: show directory struture 3 levels down (with file sizes and including hidden directories):
+14. tree -LhaC 3: show directory struture 3 levels down (with file sizes and including hidden directories):
 15. htop (or top): task manager // What's this?
 16. pip install --user {pip_package}: Python package manager to install packages to !/.local/bin
 17. pushd . : push directories onto the stack 
@@ -49,11 +49,13 @@ Reference: https://alexpetralia.com/posts/2017/6/26/learning-linux-bash-to-get-t
 19. dirs : view directories on the stack
 20. cd - : change back to last directory
 21. sed -i "s/{find}/{replace}/g" {file}: replace a string in a file
-22. find
+22. find . -type f -name \'*.txt\' -exec sed -i "s/{find}/{replace}/g" {}\; : replace a string for each file in this and child folders with a name like *.txt
 23. tmux new -s session
-24. tmux attach -t session: c
+24. tmux attach -t session: creat another terminal session without creating a new window
 25. wget {link} : download a webpage or web resource
 26. curl -X POST -d "{key: value"} "http://..." : send an HTTP request to a web server
-27
+27. find <directory>: list all directory contents and their children, recursively
 ## Infrequent commands
-1. 
+1. lsof -i :8080: list open file descriptors(-i flag for network interfaces)
+2. netstat | head -n20: list currently open Internet/UNIX sockets and relate information
+
