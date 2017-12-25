@@ -49,7 +49,7 @@ Reference: https://alexpetralia.com/posts/2017/6/26/learning-linux-bash-to-get-t
 19. dirs : view directories on the stack
 20. cd - : change back to last directory
 21. sed -i "s/{find}/{replace}/g" {file}: replace a string in a file
-22. find . -type f -name \'*.txt\' -exec sed -i "s/{find}/{replace}/g" {}\; : replace a string for each file in this and child folders with a name like *.txt
+22. find . -type f -name *.txt -exec sed -i "s/{find}/{replace}/g" {}\; : replace a string for each file in this and child folders with a name like *.txt
 23. tmux new -s session
 24. tmux attach -t session: creat another terminal session without creating a new window
 25. wget {link} : download a webpage or web resource
@@ -58,4 +58,9 @@ Reference: https://alexpetralia.com/posts/2017/6/26/learning-linux-bash-to-get-t
 ## Infrequent commands
 1. lsof -i :8080: list open file descriptors(-i flag for network interfaces)
 2. netstat | head -n20: list currently open Internet/UNIX sockets and relate information
-
+3. dstat -a: stream current disk, network, CPU activity & more
+4. nslookup <IP address>: find hostname for a remote IP address
+5. strace -f -e <syscall> <cmd>: trace system calls of a program (-e flag to filter for certain system calls)
+6. ps aux | head -n20: print currently active processes
+7. file <file>: check what a file type is
+8. uname -a: kernel
