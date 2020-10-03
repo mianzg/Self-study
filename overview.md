@@ -1,3 +1,9 @@
+# Architecture of a Database System
+
+
+## 1. Introduction
+## 2. Process Models
+## 3. Parallel Architecture: Processes and Memory Coordination
 ## 4. Relational Query Processor
 1. Query Parsing and Authorization
 2. Query Rewrite
