@@ -2,6 +2,18 @@
 * [The Snowflake Elastic Data Warehouse](#The-Snowflake-Elastic-Data-Warehouse)
      - 
 <!-- GFM-TOC -->
+## An Evaluation of Buffer Management Strategies for Relational Database Systems
+### Introduction
+### Buffer Management
+#### Domain Separation Algorithm
+#### "New" Algorithm
+#### Hot Set Algorithm
+### DBMIN Algorithm
+#### Query Locality Set Model (QLSM)
+#### DBMIN Algorithm (based on QLSM)
+### Evaluation and Comparison
+
+
 
 ## The Snowflake Elastic Data Warehouse
 ### Overview
