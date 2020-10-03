@@ -1,5 +1,10 @@
 # Architecture of a Database System
-
+<!--GFM-TOC-->
+[1. Introduction](#1-introduction)
+[2. Process Models](#2-process-models)
+[3. Parallel Architecture](#3-parallel-architecture-processes-and-memory-coordination)
+[4. Relational Query Processor](#4-relational-query-processor)
+<!--GFM-TOC-->
 
 ## 1. Introduction
 ## 2. Process Models
@@ -49,15 +54,31 @@
         - flatten nested queries -> max expose opportunities for optimizer's **single-block** optimizations
         - crucial for parallel architecture
 ### 4.3 Query Optimizer
-Transform an internal query representation into an **efficient _query plan_** (System R optimizer)
 
-Extensions to Selinger
-- Plan space
-- Selectivity estimation
-- Search algorithms
-- Parallelism
-- Auto-Tuning
-
+- Transform an internal query representation into an **efficient _query plan_** (System R optimizer) 
+    - Query plan: A dataflow diagram that pipes table data through a graph of query operators
+        - e.g System R -> machine code
+        - e.g INGRES -> **intepretable query plan** -> cross-platform portability
+        
+1. Extensions to Selinger (Sys R)
+    |          | Sys R                            | Current                                          |
+    |----------|----------------------------------|--------------------------------------------------|
+    |Plan Space| "left-deep" & postpone Cartesian | "bushy" trees and early use of Cartesian products|
+    |Selectivity estimation| on simple table and index cardinalities| sampling techniques ("joining" the histograms on the join columns); TPC-DS |
+    |Search Algorithms| DP | Goal-directed "top-down";  Heuristic search |
+    |Parallelism  | |Intra-query; Hong-Stonebraker 2-phase optimization; 
+    |Auto-Tunining| | Plan costs by "what-if" analyses|
+    
+     lower the number of plans; incr mem consumption
+2. Query Compilation and Recompilation
+    1. Static precompilation
+        - stores execution plan for subsequent exe statements
+        - useful for form-driven/canned queries over predicatble data
+    2. Cache
+        - dynamic query exexution plans in the query plan cache, similar to 1
+    3. Recompilation/Reoptimization
+        - When an index is dropped, any plan that used that index must be removed from the stored plan cache
+        - Subtleties diverge but evolve due to competition for all-type customers. Predicatable performance (IBM); Self-tuning (Microsoft)
 ### 4.4 Query Executor
 ### 4.5 Access Methods
 ### 4.6 Data Warehouses
