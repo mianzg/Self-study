@@ -80,6 +80,58 @@
         - When an index is dropped, any plan that used that index must be removed from the stored plan cache
         - Subtleties diverge but evolve due to competition for all-type customers. Predicatable performance (IBM); Self-tuning (Microsoft)
 ### 4.4 Query Executor
+On a fully-specified query plan: 1) low-level op-codes 2)**recursion on dataflow representation** 
+```java
+class iterator {
+    iterator &inputs[] # edges in the dataflow graph
+    void init();
+    tuple get_next(); # Go to next node(i.e. operator)
+    void close();
+    }
+class operator(iterator){
+    super(operator) 
+}
+```
+Any subclass of iterator can be used as input to any other
+#### Single-threaded Iterator Architecture 
+**Couple dataflow with control flow**
+```gen_next()``` 
+- Only a single DBMS thread is needed to execute an entire query graph, and queues or rate-matching between iterators are not needed
+- efficient for single-system(non-cluster) query execution to achieve performance in *time to query completion* 
+- Parallelism: exchange iterator with "pull-style" ```get_next()```
+
+#### Mem Allocation for in-flight data
+1. Tuple descriptor:
+    - Definition: A tuple descriptor is an **array of column references**, where each column reference is composed of a referece to a **tuple** somewhere else in memory, and a **column offset** in that tuple
+    ```
+    class TupleDescriptor {
+        array colRef = [[Tuple1, Offset1], ..., [TupleN,OffsetN]]
+    }
+    ```
+    - Each iterator is pre-allocated a fixed number of tuple descriptors, one for each of its inputs, and one for its output
+2. Memory allocation for Tuples
+Problem: Iterator has no dynamic mem allocation
+Solution: support tuple descriptors that reference both
+    1. BP-tuples: reside in pages in the *buffer pool*
+        - incr the **pin count** of the tuple's page, and decr when descriptor is cleared
+        - decr
+    2. M-tuple: allocate space for a tuple on the mem heap
+        - copy columns from the buffer pool and/or eval expressions in the query specification
+            - always copy immediately 
+        - bottleneck
+    ``` python
+    # TODO?
+    class iterator():
+        def __init__(self):
+            iterator &inputs[] # edges in the dataflow graph
+            TupleDescriptor self.td = BPTuples()
+    void init();
+    tuple get_next(); # Go to next node(i.e. operator)
+    void close();
+    }
+    ```
+#### Data Modification Statements
+
 ### 4.5 Access Methods
 ### 4.6 Data Warehouses
 ### 4.7 Database Extensibility
