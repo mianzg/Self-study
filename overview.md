@@ -19,8 +19,29 @@
         - constraint-check (e.g integrity check SET EMP.salary=-1)
         
 ### 4.2 Query Rewrite
-Simplify and normalize the query without changing its semantics
-
+1. Query Rewriter: Simplify and normalize the (internal repr) query without changing its semantics
+    - Rely on query and metadata
+    - No access to data in the tables
+    - Logical component in sys
+2. Responsibilities:
+    1. View Expansion (traditional; FROM clause)
+    ``` 
+    while exists Views:
+        V := current view
+        retrieve view definition from catalog manager
+        replace V with tables and preds
+        replace any references to V with column ref to tables in V
+    ```
+    2. Constant arithmetic evaluation
+    3. Logical rewriting of predicates (WHERE clause)
+        - short-circuit
+        - Plausibility of unsatisfiable queries & e.g partition elimination in parallel installations
+        - transitivity to add new predicates
+    4. Semantic optimization
+        - e.g redundant join elimination
+    5. Subquery flattening and other heuristic rewrites
+        - flatten nested queries -> max expose opportunities for optimizer's **single-block** optimizations
+        - crucial for parallel architecture
 ### 4.3 Query Optimizer
 Transform an internal query representation into an **efficient _query plan_** (System R optimizer)
 
