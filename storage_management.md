@@ -64,7 +64,67 @@ Limitation (resulted from LRU)
 
 #### DBMIN Algorithm (based on QLSM)
 Buffers are allocated and managed on a **per file instance** basis.
-- Locality Set:
+- Locality Set: The set of buffered pages associated with a file instance
+     - separately managed by a  discipline 
+     - A buffer is placed on a *global free list* if it has a page that does not belong to any locality set
+- All the buffers  in memory are accessible through a *global buffer table*
+Here's pseudocode (for personal understanding)
+     ```python
+     """
+     N = TOT_NUM_BUFFERS
+     FILE.l <=> l_ij = MAX_BUFFERS_FILEJ_OF_QUERYI # desired size
+     FILE.r <=> r_ij = NUM_BUFFERS_FILEJ_OF_QUERYI  # actual size
+     """
+     FILE = open(file)
+     BM = BufferManager()
+     QUERY = get_query()
+     
+     #initialization
+     global_free_list = []
+     
+     init_global_table()
+     for b in buffers:
+         b.link(global_free_list)
+     BM.receive(FILE.locality_set_size)
+     BM.receive(FILE.replacement_policy)
+     FILE.init_empty_locality_set()
+     FILE.l, FILE.r = FILE.locality_set_size, 0
+     
+     # Search for page
+     page = QUERY.request_page()
+     page.search_global_table()
+     page.adjust_locality_set()
+   
+     if page.is_global_table and page.is_local_set:
+         update_usage_stat(FILE.replacement_policy)
+     elif page.is_global_table? #TODO: same as in mem?
+         if page.has_owner:
+             QUERY.get_page(page)
+         else:
+             add_to_locality(page, FILE.locality_set)
+             FILE.r += 1
+             if FILE.r > FILE.l:
+                 free_page = FILE.release_page(FILE.replacement_policy)
+                 release_to_global(free_page, global_free_list)
+                 FILE.r = FILE.l
+                 update_usage_stat(FILE.replacement_policy)
+     elif not page.is_global_table:
+         free_buffer = allocate_buffer(global_free_list)
+         schedule_disk_read(page, from=disk, to=free_buffer)
+         
+         # Repeat 2nd scenario
+         if page.has_owner:
+             QUERY.get_page(page)
+         else:
+             add_to_locality(page, FILE.locality_set)
+             FILE.r += 1
+             if FILE.r > FILE.l:
+                 free_page = FILE.release_page(FILE.replacement_policy)
+                 release_to_global(free_page, global_free_list)
+                 FILE.r = FILE.l
+                 update_usage_stat(FILE.replacement_policy)
+     ```
+- Local Replacement policies do not cause actual swapping of pages.
 1. SR
      1. Straight Sequential (SS)
      2. Clustered Sequential (CS)
@@ -85,7 +145,7 @@ Buffers are allocated and managed on a **per file instance** basis.
 2. Algorithms
 
 3. Results
-
+Performance under a workload of a mix of query types
 
 ## The Snowflake Elastic Data Warehouse
 ### Overview
