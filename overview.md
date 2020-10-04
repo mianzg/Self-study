@@ -2,12 +2,34 @@
 <!--GFM-TOC-->
 [1. Introduction](#1-introduction)
 [2. Process Models](#2-process-models)
+    [2.1 Uniprocessors and Lightweight Threads](#2-1-)
 [3. Parallel Architecture](#3-parallel-architecture-processes-and-memory-coordination)
 [4. Relational Query Processor](#4-relational-query-processor)
 <!--GFM-TOC-->
 
 ## 1. Introduction
 ## 2. Process Models
+- An OS Process combines an OS program execution unit (a thread of control) with an address space private to the process
+- An OS Thread is an OS program execution unit without additional private OS context and without a private address space
+    - full access to mem under multi-threaded OS Process
+    - k-threads
+- A Lightweight Thread Package is an application-level construct
+    - scheduled in user-space
+    - P: faster thread switches; C: blocking operation
+- A DBMS Client is the software component that implements the API used by application programs to communicate with a DBMS
+- A DBMS Worker is the thread of execution in the DBMS that does work on behalf of a DBMS Client 
+ Approaches of mapping DBMS workers onto OS threads or processes
+### 2.1 Uniprocessors and Lightweight Threads
+1. Two Simplifying Assumptions
+    1. OS Thread Support: for k-threads; small overhead; inexpensive context switches
+    2. Uniprocessor Hardware: single machine with a single CPU
+#### DBMS Process Model
+1. Process per worker
+- The OS scheduler manages the timesharing of DBMS workers
+- In-mem shared data structures ([lock table]() and [buffer pool]()) -> ⬇️adv of address space separation
+2. Thread per worker
+3. Process pool
+
 ## 3. Parallel Architecture: Processes and Memory Coordination
 ## 4. Relational Query Processor
 1. Query Parsing and Authorization
