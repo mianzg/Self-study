@@ -1,5 +1,18 @@
 Data Page Layouts for Relational Databases on Deep Memory Hierarchies
+Motivation: bottleneck at I/O -> CPU & MEM (larger mem; IO hiding; complex comp on mem data) : Data requests that miss in the **cache** hierarchy
+DSM partitions an n-attr relation vertically into n subrelations
+1. max inter-record spatial locality
+    - groups a "column"
+2. incurs a minimal record reconstruction cost
+    - no need to **join** attr values of a particular record
+3. orthogonal to other design decisions
 
+F-minipage: presence bit
+V-minipage
+
+sotres one offset for each Var-length value, plus one for each of the n mini-pages
+
+In workloads where IO latency dominates execution time, the performance of PAX eventually converges to the performance of NSM.
 A Hybrid Page Layout Integrating PAX and NSM
 
 ## N-ary Storage Model(NSM)
@@ -54,6 +67,14 @@ presence bitmaps as additional fixed-size fields
 Additional addresses calculations
 
 Partially full segments require substantially less space
+
+
+B-Tree
+Data Structures and Algo
+Transactional Tech
+Query Processing
+Utility Operations
+Advanced Key Structures
 
 Allocate space in units of equal size independent of th field size
 
